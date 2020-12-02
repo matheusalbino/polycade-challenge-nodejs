@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+    database:
+        image: postgres:12.4
+        container_name: polycade-postgres
+        restart: unless-stopped
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=polycade
+            - POSTGRES_PASSWORD=polycade
+            - POSTGRES_DB=polycade
