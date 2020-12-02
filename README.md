@@ -1,61 +1,87 @@
-![Polycade.com](https://i.imgur.com/jcvsFKh.png)
+# Node.js Polycade Challenge
 
----
+## Challenge
 
-# Polycade Engineering Node.js REST API Challenge
+See about the challenge on folder [docs](https://github.com/matheusalbino/polycade-challenge-nodejs/blob/master/docs).
 
-Our apps need to query and store lots of information. We want to make sure that you have a good understanding of JavaScript and Node.js fundamentals. Can you build a simple API that can read data from and write data to a PostgreSQL database with Node.js?
+## Requirements
 
-## The Challenge
+-   Node.js v12.x
+-   npm v6.x
+-   Docker & Docker Compose
 
-Build a REST API that will allow Polycade to manage pricing individually on machines remotely with the following:
+## Usage
 
-- Endpoints
-  - GET `/pricing-models`
-    - returns all of the pricing models available for the system
-    - also returns the default pricing model in `prices.json`
-  - POST `/pricing-models`
-    - creates a new pricing model in the system
-    - returns the ID of the new pricing model to the caller
-  - GET `/pricing-models/:pm-id`
-    - get an individual pricing model
-    - include the price configurations for the pricing model
-    - if the pricing model isn't found by `pm-id` it responds with not found
-  - PUT `/pricing-models/:pm-id`
-    - updates an existing pricing model meta-data
-    - does not affect the pricing configurations for the pricing model
-  - GET `/pricing-models/:pm-id/prices`
-    - returns the prices configured for a specific pricing model
-  - POST `/pricing-models/:pm-id/prices`
-    - adds a new price configuration for a pricing model
-  - DELETE `/pricing-models/:pm-id/prices/:price-id`
-    - removes a price configuration from a pricing model
-    - if the pricing model isn't found by `pm-id` it responds with not found
-    - if the price configuration isn't found by `price-id` it responds with not found
-  - PUT `/machines/:machine-id/prices/:pm-id`
-    - sets the pricing model for an individual machine to the one from `pm-id`
-    - if the machine already has a pricing model, it is replaced by this one
-    - if the machine isn't found by `machine-id` it responds with not found
-    - if the pricing model isn't found by `pm-id` it responds with not found
-  - DELETE `/machines/:machine-id/prices/:pm-id`
-    - removes the pricing model from the machine (unsets it)
-  - GET `/machines/:machine-id/prices`
-    - return the pricing model and price configurations set for a given machine
-    - if the machine does not have a pricing model configured then the default model from `prices.json` is returned
-    - if the machine isn't found by `machine-id` it responds with not found
-- Tests
-  - Each endpoint should have its own test
-- Database
-  - Use PostgreSQL to store data about machines and prices
+### Install dependencies
 
-## Instructions
+```
+npm install // or npm i
+```
 
-How to attempt this challenge:
+### Initialize the database
 
-1) Create a new repo in your account and note the git url
-2) Clone this repo
-3) Solve the challenge
-4) Set your new repo as the origin: `git remote set-url origin ${your repo url}`
-5) Push your solution to your repo
+Create a database instance
 
-You must follow these steps for your solution to be accepted -- forks or other methods will not be considered.
+```
+npm run create-database
+```
+
+Execute all migrations
+
+```
+npm run local-run-migrate
+```
+
+Execute all seeds
+
+```
+npm run local-run-seed
+```
+
+### Running the application
+
+Normal mode:
+
+```
+npm run start
+```
+
+Development mode:
+
+```
+npm run watch
+```
+
+### Running the tests
+
+Normal mode:
+
+```
+npm run test
+```
+
+Development mode:
+
+```
+npm run watch-test
+```
+
+## Development process
+
+The first premise used in this process is don't change the technologies on the initial project files, in the dependencies installation the npm show some alerts about the vulnerabilities and outdated dependencies, so I updated the dependencies to solve some problems.
+
+I use TDD (Test Driven Development) to make this challenge, also I use the endpoints description to make the acceptance requirements. I enable the clearMocks option on jest configuration to automatically clear mock calls and instances between every test.
+
+I applied a folder structure where the responsibilities can be separated making the code more organized, divided by:
+
+```
+- docs
+- src
+ |- config
+ |- controller
+ |- database
+ |- model
+ |- route
+ |- server
+- test
+```
