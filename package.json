@@ -1,34 +1,53 @@
 {
 	"name": "challenge-rest-api",
 	"version": "1.0.0",
-	"main": "src/index.js",
 	"scripts": {
-		"lint": "eslint src/index.js",
-		"start": "babel-node src/index.js",
+		"lint": "eslint \"src/**/*.js\"",
+		"start": "babel-node src/server",
+		"watch": "nodemon --exec babel-node src/server",
 		"test": "jest",
-		"watch": "nodemon --exec babel-node --watch src/index.js",
-		"watch-test": "jest --watch"
+		"watch-test": "jest --watchAll",
+		"create-database": "docker-compose -f \"docker-compose.yml\" up -d --build",
+		"local-run-migrate": "dotenv -e .env.development -- sequelize-cli db:migrate",
+		"local-run-seed": "dotenv -e .env.development -- sequelize-cli db:seed:all",
+		"local-undo-migrate": "dotenv -e .env.development -- sequelize-cli db:migrate:undo:all",
+		"local-undo-seed": "dotenv -e .env.development -- sequelize-cli db:seed:undo:all"
 	},
 	"license": "MIT",
 	"dependencies": {
-		"koa": "^2.11.0",
-		"koa-bodyparser": "^4.2.1",
-		"koa-router": "^8.0.6",
-		"uuid": "^3.4.0"
+		"@babel/core": "^7.12.9",
+		"@babel/node": "^7.12.6",
+		"@babel/preset-env": "^7.12.7",
+		"dotenv": "^8.2.0",
+		"koa": "^2.13.0",
+		"koa-bodyparser": "^4.3.0",
+		"koa-router": "^10.0.0",
+		"pg": "^8.5.1",
+		"pg-hstore": "^2.3.3",
+		"sequelize": "^6.3.5",
+		"uuid": "^8.3.1"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.8.3",
-		"@babel/node": "^7.8.3",
-		"@babel/preset-env": "7.3.4",
-		"babel-eslint": "^10.0.3",
-		"eslint": "^6.8.0",
-		"jest": "^25.1.0",
-		"nodemon": "^2.0.2"
+		"@types/jest": "^26.0.15",
+		"@types/koa": "^2.11.6",
+		"@types/koa-bodyparser": "^4.3.0",
+		"@types/koa-router": "^7.4.1",
+		"@types/node": "^14.14.10",
+		"@types/sequelize": "^4.28.9",
+		"@types/supertest": "^2.0.10",
+		"babel-eslint": "^10.1.0",
+		"dotenv-cli": "^4.0.0",
+		"eslint": "^7.14.0",
+		"jest": "^26.6.3",
+		"nodemon": "^2.0.6",
+		"sequelize-cli": "^6.2.0",
+		"supertest": "^6.0.1"
 	},
 	"jest": {
+		"clearMocks": true,
 		"testEnvironment": "node",
 		"testPathIgnorePatterns": [
 			"<rootDir>/node_modules"
-	]
+		]
 	}
 }
