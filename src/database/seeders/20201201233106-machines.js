@@ -3,48 +3,44 @@
 
 const { v4 } = require('uuid');
 
+async function insertMachine (queryInterface, pricingModelId, partialData) {
+	await queryInterface.bulkInsert('machines', [{
+		id: v4(),
+		pricing_model_id: pricingModelId,
+		...partialData,
+		created_at: new Date().toISOString(),
+		updated_at: new Date().toISOString()
+	}], {});
+}
+
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
+		const [listMachine] = await queryInterface.sequelize.query('SELECT * FROM machines;');
+		const names = listMachine.map(({name}) => name);
 		const [pricingModels] = await queryInterface.sequelize.query('SELECT * FROM pricing_models;');
 
 		const machines = pricingModels.map(async (pricingModel) => {
-
 			if (pricingModel.name === 'Default') {
-				await queryInterface.bulkInsert('machines', [{
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: 'Machine 2',
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}, {
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: 'Machine 4',
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}], {});
+				if (!names.includes('Machine 2')) {
+					await insertMachine(queryInterface, pricingModel.id, {name: 'Machine 2'});
+				}
+
+				if (!names.includes('Machine 4')) {
+					await insertMachine(queryInterface, pricingModel.id, {name: 'Machine 4'});
+				}
 			}
 
 			if (pricingModel.name === 'Super Value Option') {
-				await queryInterface.bulkInsert('machines', [{
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: 'Machine 1',
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}], {});
+				if (!names.includes('Machine 1')) {
+					await insertMachine(queryInterface, pricingModel.id, {name: 'Machine 1'});
+				}
 			}
 
 			if (pricingModel.name === 'Long Play') {
-				await queryInterface.bulkInsert('machines', [{
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: 'Machine 3',
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}], {});
+				if (!names.includes('Machine 3')) {
+					await insertMachine(queryInterface, pricingModel.id, {name: 'Machine 3'});
+				}
 			}
-
 		});
 
 		await Promise.all(machines);

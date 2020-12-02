@@ -3,72 +3,82 @@
 
 const { v4 } = require('uuid');
 
+async function getPricesName (queryInterface, pricingModelId) {
+	const [prices] = await queryInterface.sequelize.query(`SELECT * FROM prices WHERE pricing_model_id = '${pricingModelId}';`);
+	return prices.map(({name}) => name);
+}
+
+async function insertPrice (queryInterface, pricingModelId, partialData) {
+	await queryInterface.bulkInsert('prices', [{
+		id: v4(),
+		pricing_model_id: pricingModelId,
+		...partialData,
+		created_at: new Date().toISOString(),
+		updated_at: new Date().toISOString()
+	}], {});
+}
+
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
 		const [pricingModels] = await queryInterface.sequelize.query('SELECT * FROM pricing_models;');
 
 		const prices = pricingModels.map(async (pricingModel) => {
+			const names = await getPricesName(queryInterface, pricingModel.id);
 
 			if (pricingModel.name === 'Default') {
-				await queryInterface.bulkInsert('prices', [{
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: '10 minutes',
-					value: 10,
-					price: 3,
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}, {
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: '20 minutes',
-					value: 20,
-					price: 5,
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}, {
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: '60 minutes',
-					value: 60,
-					price: 15,
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}], {});
+				if (!names.includes('10 minutes')) {
+					await insertPrice(queryInterface, pricingModel.id, {
+						name: '10 minutes',
+						value: 10,
+						price: 3
+					});
+				}
+
+				if (!names.includes('20 minutes')) {
+					await insertPrice(queryInterface, pricingModel.id, {
+						name: '20 minutes',
+						value: 20,
+						price: 5
+					});
+				}
+
+				if (!names.includes('60 minutes')) {
+					await insertPrice(queryInterface, pricingModel.id, {
+						name: '60 minutes',
+						value: 60,
+						price: 15
+					});
+				}
+
 			}
 
 			if (pricingModel.name === 'Super Value Option') {
-				await queryInterface.bulkInsert('prices', [{
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: '10 minutes',
-					value: 10,
-					price: 3,
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}, {
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: '20 minutes',
-					value: 20,
-					price: 5,
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}], {});
+				if (!names.includes('10 minutes')) {
+					await insertPrice(queryInterface, pricingModel.id, {
+						name: '10 minutes',
+						value: 10,
+						price: 3
+					});
+				}
+
+				if (!names.includes('20 minutes')) {
+					await insertPrice(queryInterface, pricingModel.id, {
+						name: '20 minutes',
+						value: 20,
+						price: 5
+					});
+				}
 			}
 
 			if (pricingModel.name === 'Long Play') {
-				await queryInterface.bulkInsert('prices', [{
-					id: v4(),
-					pricing_model_id: pricingModel.id,
-					name: '60 minutes',
-					value: 60,
-					price: 15,
-					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
-				}], {});
+				if (!names.includes('60 minutes')) {
+					await insertPrice(queryInterface, pricingModel.id, {
+						name: '60 minutes',
+						value: 60,
+						price: 15
+					});
+				}
 			}
-
 		});
 
 		await Promise.all(prices);

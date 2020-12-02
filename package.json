@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"scripts": {
 		"lint": "eslint \"src/**/*.js\"",
+		"prestart": "npm-run-all -s create-database local-run-*",
 		"start": "babel-node src/server",
+		"prewatch": "npm-run-all -s create-database local-run-*",
 		"watch": "nodemon --exec babel-node src/server",
 		"test": "jest",
 		"watch-test": "jest --watchAll",
@@ -22,6 +24,7 @@
 		"koa": "^2.13.0",
 		"koa-bodyparser": "^4.3.0",
 		"koa-router": "^10.0.0",
+		"npm-run-all": "^4.1.5",
 		"pg": "^8.5.1",
 		"pg-hstore": "^2.3.3",
 		"sequelize": "^6.3.5",
