@@ -22,6 +22,6 @@ export class Machine extends Model {
 	}
 
 	static associate (models) {
-		this.belongsTo(models.PricingModel, { foreignKey: 'pricing_model_id' });
+		this.belongsTo(models.PricingModel, { foreignKey: 'pricing_model_id', as: 'pricingModel' });
 	}
 }

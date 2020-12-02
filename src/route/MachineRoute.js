@@ -1,13 +1,14 @@
 import Router from 'koa-router';
-import { deleteMachinePricingModelByIdController } from '../controller/DeleteMachinePricingModelByIdController';
-import { getAllMachinePricesByIdController } from '../controller/GetAllMachinePricesByIdController';
-import { updateMachinePriceModelByIdController } from '../controller/UpdateMachinePriceModelByIdController';
+import { MachineController } from '../controller/MachineController';
 
 const router = new Router();
+const controller = new MachineController();
 
 export default router
 	.prefix('/machines')
-	.put('/:machineId/prices/:pmId', updateMachinePriceModelByIdController)
-	.delete('/:machineId/prices/:pmId', deleteMachinePricingModelByIdController)
-	.get('/:machineId/prices', getAllMachinePricesByIdController)
+	.get('/', controller.getAll)
+	.get('/:machineId', controller.getById)
+	.put('/:machineId/prices/:pmId', controller.updateMachinePricingModelById)
+	.delete('/:machineId/prices/:pmId', controller.removeMachinePricingModelById)
+	.get('/:machineId/prices', controller.getAllPricesByMachineId)
 ;
