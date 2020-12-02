@@ -106,7 +106,7 @@ describe('GET /pricing-models/:pm-id', () => {
 		expect(body.prices).toHaveLength(3);
 	});
 
-	it('should return 404 if pricing model not exits', async () => {
+	it('should return 404 if pricing model not exists', async () => {
 		jest.spyOn(PricingModel, 'findOne').mockResolvedValueOnce(null);
 
 		const { status } = await request.get(`/pricing-models/${PricingModelFindOneResult.id}`);
@@ -192,7 +192,7 @@ describe('GET /pricing-models/:pm-id/prices', () => {
 		expect(body).toMatchObject(PriceFindAllResult);
 	});
 
-	it('should return 404 if pricing model not exits', async () => {
+	it('should return 404 if pricing model not exists', async () => {
 		jest.spyOn(Price, 'findAll').mockResolvedValueOnce([]);
 
 		const { status } = await request.get('/pricing-models/29faea04-33d8-4aa7-bcf9-aca89f7f553b/prices');
@@ -253,7 +253,7 @@ describe('DELETE /pricing-models/:pm-id/prices/:price-id', () => {
 		expect(PriceFindOneResult.destroy).toHaveBeenCalled();
 	});
 
-	it('should return 404 if pricing model not exits', async () => {
+	it('should return 404 if pricing model not exists', async () => {
 		jest.spyOn(PricingModel, 'findOne').mockResolvedValueOnce(null);
 
 		const { status } = await request.delete(
@@ -263,7 +263,7 @@ describe('DELETE /pricing-models/:pm-id/prices/:price-id', () => {
 		expect(status).toBe(404);
 	});
 
-	it('should return 404 if price configuration not exits', async () => {
+	it('should return 404 if price configuration not exists', async () => {
 		jest.spyOn(PricingModel, 'findOne').mockResolvedValueOnce(PricingModelFindOneResult);
 		jest.spyOn(Price, 'findOne').mockResolvedValueOnce(null);
 
